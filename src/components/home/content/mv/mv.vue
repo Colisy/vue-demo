@@ -63,12 +63,12 @@ export default {
         load2() {
             let  url=testing.address+'/index.php/api/mv/1/'+this.page+'';
             this.$http.get(url).then(function (response) {
-                var _list2 = response.body.data.list;
-                this.datas = [...this.datas, ..._list2];
                 if (_list2.length < 15 || this.page == 100) {
                     this.$refs.infinitescroll.$emit('ydui.infinitescroll.loadedDone');
                     return;
                 }
+                var _list2 = response.body.data.list;
+                this.datas = [...this.datas, ..._list2];
                 this.$refs.infinitescroll.$emit('ydui.infinitescroll.finishLoad');
                 this.page++;
             });

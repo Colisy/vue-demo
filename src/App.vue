@@ -9,13 +9,12 @@ export default {
   name: 'app',
   created() {
     if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
-      // 歌曲https://localhost:8088/#/playController?id=19
-      if (window.location.hash.substr(window.location.hash, window.location.hash.indexOf('?')) == '#/playController') {
-        window.location.href = "https://www.feizhugu.com/song/songDetail?id="+window.location.hash.substr( window.location.hash.indexOf('=')+1);
-
-        // mv
-      }else if(window.location.hash.substr(window.location.hash, window.location.hash.indexOf('?'))=='#/mvDetail'){
-        window.location.href = "https://www.feizhugu.com/mv/MVDetail?id="+window.location.hash.substr( window.location.hash.indexOf('=')+1);
+      if (window.location.pathname == '/playController') {
+        window.location.href = "https://www.feizhugu.com/song/songDetail?id="+window.location.search.substr( window.location.search.indexOf('=')+1);
+      }else if(window.location.pathname=='/mvDetail'){
+        window.location.href = "https://www.feizhugu.com/mv/MVDetail?id="+window.location.search.substr( window.location.search.indexOf('=')+1);
+      }else if(window.location.href == 'https://www.feizhugu.com/festival'){
+      window.location.href = "https://www.feizhugu.com/festival";
       }else{
         window.location.href ='https://www.feizhugu.com/';
       }

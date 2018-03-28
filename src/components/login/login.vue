@@ -35,15 +35,4 @@ export default {
         height 1.1rem
         margin-bottom 0.5rem
 
-
-
-
-
-
-
-
-
-
-
-
 </style>

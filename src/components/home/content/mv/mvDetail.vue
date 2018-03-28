@@ -21,21 +21,19 @@
                 {{item.brief}}
             </p>
         </div>
-        <share></share>
     </div>
 </template>
 <script>
 import Vue from 'vue'
 import {testing} from 'script/commonVarite'
 import {Toast} from 'vue-ydui/dist/lib.rem/dialog';
-import share from 'component/share'
 Vue.prototype.$dialog = {
     toast: Toast
 };
 export default {
     name : 'mvDetail',
     components:{
-        share
+
     },
     data(){
         return {
@@ -59,19 +57,71 @@ export default {
     },
     metaInfo () {
         return {
-            title:this.item.title+' - '+this.item.singer+'-中国儿童音乐网'
+            title:this.item.title+' - '+this.item.nickname+'-中国儿童音乐网'
         }
     },
     mounted(){
+      // 分享
+      var url2 = testing.address + "/index.php/api/wx_conf?url=" + window.location.href
+      var localurl = window.location.href;
+      var that = this;
+      this.$http.get(url2).then(data => {
+        wx.config({
+          debug: data.body.debug,
+          appId: data.body.appId,
+          timestamp: data.body.timestamp, // 必填，生成签名的时间戳
+          nonceStr: data.body.nonceStr, // 必填，生成签名的随机串
+          signature: data.body.signature, // 必填，签名，见附录1
+          jsApiList: data.body.jsApiList // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+        });
+        wx.ready(function() {
+          // 发送给朋友
+          wx.onMenuShareAppMessage({
+            title: that.item.title + '-' + that.item.nickname, // 分享标题
+            desc:'中国儿童音乐网', // 分享描述
+            link: window.location.href+"?shan",
+            imgUrl: testing.address+that.item.cover_img, // 分享图标
+            type: 'video', // 分享类型,music、video或link，不填默认为link
+            dataUrl: testing.address+that.item.mv_url, // 如果type是music或video，则要提供数据链接，默认为空
+            success: function() {
 
+            },
+            cancel: function() {
+              alert('分享失败')
+            }
+          });
+          // 分享到朋友圈
+          wx.onMenuShareTimeline({
+              title: that.item.title + '-' + that.item.nickname + '-中国儿童音乐网', // 分享标题
+              link: window.location.href+"?shan",
+              imgUrl: testing.address+that.item.cover_img, // 分享图标
+            success: function() {
+
+            },
+            cancel: function() {
+              alert('分享失败')
+            }
+          });
+
+          // 出错的时候
+          wx.error(function(res) {
+            console.log(res)
+          });
+        });
+      })
     },
     methods:{
+
         init(){
-            let _id=window.location.hash.substring(window.location.hash.indexOf('=')+1,window.location.hash.length),
-            url=testing.address+"/index.php/api/mv-detail/"+_id+"";
+          let _id ='';
+        if(window.location.search.indexOf('shan')==-1){
+         _id=window.location.search.substring(window.location.search.indexOf('=') + 1, window.location.search.length);
+        }else{
+          _id = window.location.search.substring(window.location.search.indexOf('=') + 1, window.location.search.indexOf('shan')-3);
+        }
+          let  url=testing.address+"/index.php/api/mv-detail/"+_id+"";
             this.$http.get(url).then(data=>{
                 this.item=data.body.data;
-
             },response=>{
                 this.$dialog.toast({
                     mes: "网络开小差了...",

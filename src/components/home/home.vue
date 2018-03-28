@@ -5,9 +5,11 @@
                 <swiper></swiper>
                 <song></song>
             </yd-tab-panel>
-
             <yd-tab-panel label="MV" ref='mv'>
                 <mv></mv>
+            </yd-tab-panel>
+            <yd-tab-panel label="歌单" ref='playlist'>
+                <playlist></playlist>
             </yd-tab-panel>
             <yd-tab-panel label="搜索" ref='select'>
                 <selectCom></selectCom>
@@ -25,8 +27,8 @@ import swiper from 'component/swiper'
 import song from 'components/home/content/newSong/newSong'
 import mv from 'components/home/content/mv/mv'
 import selectCom from 'components/home/content/select/select'
+import playlist from 'components/home/content/playlist/playlist'
 import {testing} from 'script/commonVarite'
-
 import {Toast} from 'vue-ydui/dist/lib.rem/dialog';
 Vue.prototype.$dialog = {
     toast: Toast
@@ -37,12 +39,44 @@ export default {
         swiper,
         song,
         mv,
-        selectCom
+        selectCom,
+        playlist
     },
     data(){
         return {
 
         }
+    },
+    mounted(){
+    },
+    beforeRouteLeave(to, from, next) {
+      if(to.path=='/playController'){
+        next(() => {
+          path: to.path
+        })
+        setTimeout(()=>{
+          window.location.reload();
+        },1000)
+      }else if(to.path=='/mvDetail'){
+        next(() => {
+          path: to.path
+        })
+        setTimeout(()=>{
+          window.location.reload();
+        },1000)
+      }else if(to.path=='/plDetail'){
+        next(() => {
+          path: to.path
+        })
+        setTimeout(()=>{
+          window.location.reload();
+        },1000)
+      }else{
+        next(() => {
+          path: to.path
+        })
+      }
+
     },
     metaInfo () {
         return {

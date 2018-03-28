@@ -61,6 +61,7 @@ export default {
     },
     methods:{
         init(){
+          console.log(this)
             let  url=testing.address+'/index.php/api/song/2/'+1;
             this.$http.get(url).then(data=>{
                 this.items=data.body.data.list
@@ -103,13 +104,7 @@ export default {
                 emulateJSON:true
             }).then(data=>{
 
-            },response=>{
-                this.$Notice.warning({
-                    title: '出错了哦~',
-                    desc: '请检查您的网络是否连接正常哦~'
-                });
             })
-
             this.$router.push({
                 path:'/playController',
                 query:{

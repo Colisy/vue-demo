@@ -2,16 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import VueResource from 'vue-resource'
 import mainVue from '@/mainVue'
-import login from '@/components/login/login'
-import signIn from '@/components/login/signIn'
-import signUp from '@/components/login/signUp'
 import home from '@/components/home/home'
-import mvDetail from 'components/home/content/mv/mvDetail'
 
-import playController from 'component/playController'
 Vue.use(Router)
 export default new Router({
-    // mode: 'history',
+    mode: 'history',
     routes: [
         {
             path: '/',
@@ -24,39 +19,41 @@ export default new Router({
                 },
                 {
                     path:'/mvDetail',
-                    component: mvDetail,
+                    component: resolve => require(['components/home/content/mv/mvDetail'], resolve)
+                },
+                {
+                  path:'/plDetail',
+                  component: resolve => require(['components/home/content/playlist/plDetail'], resolve)
+                },
+                {
+                    path:'/playController',
+                    component: resolve => require(['component/playController'], resolve)
+                },
+                {
+                  path:'/invite',
+                  component:resolve => require(['components/home/content/invite/invite'], resolve)
                 }
             ]
         },
-        {
-            path:'/playController',
-            component: playController
-        },
+
         {
             path: '/login',
             name: 'login',
-            component: login,
+            component: resolve => require(['@/components/login/login'], resolve),
             redirect: {name: 'signIn'},
             children:[
                 {
                     path:'/signIn',
                     name: 'signIn',
-                    component: signIn
+                    component: resolve => require(['@/components/login/signIn'], resolve)
                 },
                 {
                     path:'/signUp',
                     name: 'signUp',
-                    component: signUp
+                    component: resolve => require(['@/components/login/signUp'], resolve)
                 }
             ]
         }
     ]
 
 })
-
-
-
-
-
-
-//

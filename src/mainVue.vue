@@ -32,14 +32,10 @@ export default {
                 emulateJSON:true
             }).then(data=>{
                 if(data.body.status=='ok'){
-                    
+                    this.$cookie.set('uid',data.body.data.uid)
                     this.$cookie.set('isLogin',data.body.status)
                     this.nickname=data.body.data.nickname
                     this.character=data.body.data.avatar
-                    this.$dialog.toast({
-                        mes: '登录成功',
-                        timeout: 1500
-                    });
                 }else if(data.body.msg=='请先登录'){
                     this.$cookie.set("isLogin", "", -1);
                     this.$dialog.toast({

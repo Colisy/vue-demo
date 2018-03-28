@@ -23,7 +23,7 @@
             </a>
         </li>
         <li class='_border'>
-            <a href="#signUp">还没有账号？立即注册</a>
+            <a href="/signUp">还没有账号？立即注册</a>
         </li>
     </ul>
 </template>
@@ -97,7 +97,6 @@ export default {
                    },2000)
                }else if(data.body.status=='ok'){
                  this.$cookie.set('skey',data.body.skey)
-                //    this.$cookie.set('isLogin',data.body.status)
                    this.$router.push({
                        path:'/'
                    })
@@ -121,7 +120,7 @@ export default {
               "username":this.telephone,
               "password":this.password,
               "autologin":remember,
-              'auth':window.location.hash.substring(window.location.hash.indexOf('=')+1,window.location.hash.length)
+              'auth':window.location.search.substring(window.location.search.indexOf('=')+1,window.location.search.length)
           },{
               emulateJSON:true
           }).then(data=>{
@@ -149,7 +148,7 @@ export default {
        },
         _immedit(){
             if(this.$vuerify.check()){
-                if(window.location.hash.indexOf('auth')==-1){
+                if(window.location.search.indexOf('auth')==-1){
                     this.normalLogin()
                 }else{
                     this.wechatLogin()

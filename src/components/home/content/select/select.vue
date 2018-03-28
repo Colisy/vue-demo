@@ -24,7 +24,7 @@
         <p>
           <span class='title'>MV</span>
           <span class='name'>{{mv.title}}</span><br>
-          <span class='author'>{{mv.singer}}</span>
+          <span class='author'>{{mv.nickname}}</span>
         </p>
         <img src="../../../../assets/play.png" alt="" class='_clickPlay'>
       </li>

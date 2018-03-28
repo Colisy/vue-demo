@@ -70,7 +70,8 @@ export default {
             repassword: '',
             start1: false,
             text:"立即注册",
-            auth:''
+            auth:'',
+            invited: ''
         }
     },
     vuerify: {
@@ -112,15 +113,27 @@ export default {
         },20)
     },
     methods:{
+      invitedHandle(){
+        if(this.invited!=""){
+          let url = testing.address + '/index.php/prize/add';
+          this.$http.post(url, {
+            'uid': this.invited,
+            'type':'reg'
+          }, {
+            emulateJSON: true
+          }).then(data => {
+          })
+        }
+      },
         gotologin(){
-            if(window.location.hash.indexOf('auth')!=-1){
-                this.$router.push({path:`/signIn?`+window.location.hash.substring(window.location.hash.indexOf('?')+1,window.location.hash.length)+``})
+            if(window.location.search.indexOf('auth')!=-1){
+                this.$router.push({path:`/signIn?`+window.location.search.substring(window.location.search.indexOf('?')+1,window.location.search.length)+``})
             }else{
                 this.$router.push({path:"/signIn"})
             }
         },
         init(){
-            if(window.location.hash.indexOf('auth')!=-1){
+            if(window.location.search.indexOf('auth')!=-1){
                 this.$dialog.toast({
                     mes: '登录成功！绑定手机号',
                     timeout: 2000
@@ -145,11 +158,11 @@ export default {
                     emulateJSON:true
                 }).then(data=>{
                     if(data.body.status=='ok'){
+                      this.$cookie.set('sendSkey',data.body.skey)
                         this.$dialog.toast({
                             mes: '发送短信成功',
                             timeout: 1500
                         })
-
                         this.start1 = true;
                     }
                 },response=>{
@@ -165,30 +178,37 @@ export default {
             if (this.$vuerify.check()&&this.agree) {
                 //信息正确
                 let  url=testing.address+'/index.php/api/user/reg'
-                if(window.location.hash.indexOf('auth')!=-1){
-                    this.auth=window.location.hash.substring(window.location.hash.indexOf('=')+1,window.location.hash.length)
+                if(window.location.search.indexOf('auth')!=-1){
+                    this.auth=window.location.search.substring(window.location.search.indexOf('=')+1,window.location.search.length)
                 }else{
-                    this.auth=""
+                    this.auth="";
+                    location.search.split('?')[1] ? this.invited = location.search.split('?')[1] : this.invited = ''
                 }
                this.$http.post(url,{
+                  'skey':this.$cookie.get('sendSkey'),
                    'phone':this.phone,
                    'verify':this.verificat,
                    'pwd':this.password,
                    'repwd':this.repassword,
                    'agree':this.agree,
-                    "auth":this.auth
+                    "auth":this.auth,
+                    'inviter': this.invited
                },{
                    emulateJSON:true
                }).then(data=>{
-
                    if(data.body.msg=="该用户已存在"){
+                     this.invitedHandle()
                      this.$cookie.set('skey',data.body.skey)
                        this.$cookie.set('isLogin',data.body.status)
                        this.$dialog.toast({
-                           mes: "您已经注册过了哦~",
+                           mes: "您已经注册过了哦~去登录吧",
                            timeout: 1500
                        });
+                       this.$router.push({
+                           path: '/signIn'
+                       });
                    }else if(data.body.status=='ok'){
+                     this.invitedHandle()
                      this.$cookie.set('skey',data.body.skey)
                        this.$cookie.set('isLogin',data.body.status)
                        this.$dialog.toast({
@@ -196,7 +216,7 @@ export default {
                            timeout: 1500
                        });
                        this.$router.push({
-                           path: '/'
+                           path: '/signIn'
                        });
                    }else{
                        this.$dialog.toast({
@@ -205,11 +225,6 @@ export default {
                        });
                    }
 
-               },response=>{
-                   this.$dialog.toast({
-                       mes: '网络状态不佳~',
-                       timeout: 1500
-                   });
                })
             }else{
                 this.$dialog.toast({
